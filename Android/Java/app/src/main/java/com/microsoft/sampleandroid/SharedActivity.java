@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mypackage.invoker.ApiClient;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
@@ -42,8 +43,7 @@ public class SharedActivity extends AppCompatActivity
         DemoStepLocating  // Looking for an anchor
     }
 
-    // Set this string to the URL created when publishing your Shared anchor service in the Sharing sample.
-    private static final String SharingAnchorsServiceUrl = "";
+    private static final ApiClient apiClient = new ApiClient();
 
     private String anchorId = "";
     private final ConcurrentHashMap<String, AnchorVisual> anchorVisuals = new ConcurrentHashMap<>();
@@ -113,7 +113,7 @@ public class SharedActivity extends AppCompatActivity
             String inputVal = anchorNumInput.getText().toString();
             if (inputVal != null && !inputVal.isEmpty()) {
 
-                AnchorGetter anchorExchanger = new AnchorGetter(SharingAnchorsServiceUrl, this::anchorLookedUp);
+                AnchorGetter anchorExchanger = new AnchorGetter(apiClient, this::anchorLookedUp);
                 anchorExchanger.execute(inputVal);
 
                 currentStep = DemoStep.DemoStepLocating;
@@ -182,13 +182,6 @@ public class SharedActivity extends AppCompatActivity
 
             finish();
             return;
-        }
-
-        if (SharingAnchorsServiceUrl == null || SharingAnchorsServiceUrl.isEmpty()) {
-            Toast.makeText(this, "Set the SharingAnchorsServiceUrl in SharedActivity.java", Toast.LENGTH_LONG)
-                    .show();
-
-            finish();
         }
 
         updateStatic();
@@ -351,7 +344,7 @@ public class SharedActivity extends AppCompatActivity
                     anchorVisuals.remove("");
 
                     Log.d("ASADemo", "recording anchor with web service");
-                    AnchorPoster poster = new AnchorPoster(SharingAnchorsServiceUrl, this::anchorPosted);
+                    AnchorPoster poster = new AnchorPoster(apiClient, this::anchorPosted);
                     Log.d("ASADemo", "anchorId: " + anchorId);
                     poster.execute(anchorId);
                 }).exceptionally(thrown -> {

@@ -1,0 +1,146 @@
+openapi: 3.0.2
+info:
+  version: 1.1.11
+  title: Anchors sharing service REST openapi 3 specifications
+tags:
+  - name: anchor
+  - name: token
+servers:
+  - url: http://localhost:8081
+paths:
+  /anchors:
+    post:
+      summary: "Create new anchor"
+      tags: [ anchor ]
+      description: "Create new anchor"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BackendHttpError"
+  /anchors/key:
+    post:
+      summary: "Create new anchor key"
+      tags: [ anchor ]
+      description: "Create new anchor key"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BackendHttpError"
+  /anchors/last:
+    get:
+      summary: "Get the last anchor"
+      tags: [ anchor ]
+      description: "Get the last anchor"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BackendHttpError"
+  /anchors/{anchorNumber}:
+    parameters:
+      - $ref: "#/components/parameters/anchorNumber"
+    get:
+      summary: " Get the key"
+      tags: [ anchor ]
+      description: "Get the key if present"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BackendHttpError"
+  /apptoken:
+    get:
+      summary: "Get api token"
+      tags: [ token ]
+      description: "Get api token"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BackendHttpError"
+components:
+  schemas:
+    BackendHttpError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2017-07-21T17:32:28Z"
+        error:
+          type: string
+          example: "Not Found"
+        message:
+          type: string
+        path:
+          type: string
+  parameters:
+    anchorNumber:
+      in: path
+      name: anchorNumber
+      description: Anchor Number
+      required: true
+      schema:
+        type: integer
+        format: int64
+    anchorKey:
+      in: path
+      name: anchorKey
+      description: Anchor key
+      required: true
+      schema:
+        type: string
